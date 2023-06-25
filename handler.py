@@ -31,7 +31,8 @@ class EndpointHandler():
         Returns:
             Dict[str, str]: Dictionary with the base64 encoded image.
         """
-        positive_prompt = data.pop("positive_prompt", "")
+        inputs = data.pop("inputs", data)
+        # positive_prompt = data.pop("positive_prompt", None)
         negative_prompt = data.pop("negative_prompt", None)
         height = data.pop("height", 512)
         width = data.pop("width", 512)
@@ -41,10 +42,12 @@ class EndpointHandler():
         # Run inference pipeline
         with autocast(device.type):
             if negative_prompt is None:
-                image = self.pipe(prompt=positive_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
+                print(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = self.pipe(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
                 image = image.images[0]
             else:
-                image = self.pipe(prompt=positive_prompt, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
+                print(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = self.pipe(prompt=inputs, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
                 image = image.images[0]
 
         # Encode image as base64
