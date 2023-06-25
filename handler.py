@@ -40,9 +40,9 @@ class EndpointHandler():
         # run inference pipeline
         with autocast(device.type):
             if negative_prompt is None:
-                image = self.pipe(inputs,prompt = postive_prompt ,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
+                image = self.pipe(prompt = postive_prompt ,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
             else:
-                image = self.pipe(inputs,prompt = postive_prompt ,negative_prompt = negative_prompt,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
+                image = self.pipe(prompt = postive_prompt ,negative_prompt = negative_prompt,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
 
         # encode image as base 64
         buffered = BytesIO()
