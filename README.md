@@ -68,7 +68,6 @@ The API response will be a JSON object with the following structure:
 ### Here's an example request using Python:
 
 ```python
-
 import requests
 
 url = '<hf_endpoint_url>'
