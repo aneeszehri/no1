@@ -5,7 +5,7 @@
     "transformers",
     "CLIPImageProcessor"
   ],
-  "requires_safety_checker": false,
+  "requires_safety_checker": true,
   "safety_checker": [
     "stable_diffusion",
     "StableDiffusionSafetyChecker"
