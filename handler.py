@@ -1,5 +1,9 @@
 from typing import  Dict, List, Any
 import torch
+import os
+import PIL
+from PIL import Image
+
 from torch import autocast
 from diffusers import StableDiffusionPipeline
 import base64
@@ -13,9 +17,9 @@ if device.type != 'cuda':
     raise ValueError("need to run on GPU")
 
 class EndpointHandler():
-    def __init__(self, path=""):
+    def __init__(self, path="tomriddle/anythinv3-vae"):
         # load the optimized model
-        self.pipe = StableDiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16)
+        self.pipe = StableDiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16,low_cpu_mem_usage=False)
         self.pipe = self.pipe.to(device)
 
 
@@ -27,11 +31,18 @@ class EndpointHandler():
         Return:
             A :obj:`dict`:. base64 encoded image
         """
-        inputs = data.pop("inputs", data)
+        postive_prompt = data.pop("postive_prompt", data)
+        negative_prompt = data.pop("negative_prompt", None)
+        height = data.pop("height", 512)
+        width = data.pop("width", 512)
+        guidance_scale = data.pop("guidance_scale", 7.5)
 
         # run inference pipeline
         with autocast(device.type):
-            image = self.pipe(inputs, guidance_scale=7.5)["sample"][0]
+            if negative_prompt is None:
+                image = self.pipe(inputs,prompt = postive_prompt ,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
+            else:
+                image = self.pipe(inputs,prompt = postive_prompt ,negative_prompt = negative_prompt,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
 
         # encode image as base 64
         buffered = BytesIO()
