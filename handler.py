@@ -42,11 +42,11 @@ class EndpointHandler():
         # Run inference pipeline
         with autocast(device.type):
             if negative_prompt is None:
-                print(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
+                print(str(inputs), str(height), str(width), str(guidance_scale_)
                 image = self.pipe(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
                 image = image.images[0]
             else:
-                print(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
+                print(str(inputs), str(height), str(negative_prompt), str(width), str(guidance_scale))
                 image = self.pipe(prompt=inputs, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
                 image = image.images[0]
 
