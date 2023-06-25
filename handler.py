@@ -17,7 +17,7 @@ if device.type != 'cuda':
     raise ValueError("need to run on GPU")
 
 class EndpointHandler():
-    def __init__(self, path="tomriddle/anythinv3-vae"):
+    def __init__(self, path=""):
         # load the optimized model
         self.pipe = StableDiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16,low_cpu_mem_usage=False)
         self.pipe = self.pipe.to(device)
