@@ -23,31 +23,40 @@ class EndpointHandler():
         self.pipe = self.pipe.to(device)
 
 
-    def __call__(self, data: Any) -> List[List[Dict[str, float]]]:
+    def __call__(self, data: Any) -> Dict[str, str]:
         """
         Args:
-            data (:obj:):
-                includes the input data and the parameters for the inference.
-        Return:
-            A :obj:`dict`:. base64 encoded image
+            data (Any): Includes the input data and the parameters for the inference.
+
+        Returns:
+            Dict[str, str]: Dictionary with the base64 encoded image.
         """
-        postive_prompt = data.pop("postive_prompt", data)
+        positive_prompt = data.pop("positive_prompt", "")
         negative_prompt = data.pop("negative_prompt", None)
         height = data.pop("height", 512)
         width = data.pop("width", 512)
+
         guidance_scale = data.pop("guidance_scale", 7.5)
 
-        # run inference pipeline
+        # Run inference pipeline
         with autocast(device.type):
             if negative_prompt is None:
-                image = self.pipe(prompt = postive_prompt ,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
+                image = self.pipe(prompt=positive_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = image.images[0]
             else:
-                image = self.pipe(prompt = postive_prompt ,negative_prompt = negative_prompt,height = height ,width = width ,guidance_scale=float(guidance_scale))["sample"][0]
+                image = self.pipe(prompt=positive_prompt, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = image.images[0]
 
-        # encode image as base 64
+        # Encode image as base64
         buffered = BytesIO()
         image.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue())
 
-        # postprocess the prediction
+        # Postprocess the prediction
         return {"image": img_str.decode()}
+
+    def decode_base64_image(self, image_string):
+        base64_image = base64.b64decode(image_string)
+        buffer = BytesIO(base64_image)
+        image = Image.open(buffer)
+        return image
