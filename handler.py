@@ -36,6 +36,8 @@ class EndpointHandler():
         negative_prompt = data.pop("negative_prompt", None)
         height = data.pop("height", 512)
         width = data.pop("width", 512)
+        inference_steps = data.pop("inference_steps", 25)
+        
 
         guidance_scale = data.pop("guidance_scale", 7.5)
 
@@ -43,11 +45,11 @@ class EndpointHandler():
         with autocast(device.type):
             if negative_prompt is None:
                 print(str(inputs), str(height), str(width), str(guidance_scale))
-                image = self.pipe(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = self.pipe(prompt=inputs, height=height, width=width, guidance_scale=float(guidance_scale),num_inference_steps=inference_steps)
                 image = image.images[0]
             else:
                 print(str(inputs), str(height), str(negative_prompt), str(width), str(guidance_scale))
-                image = self.pipe(prompt=inputs, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale))
+                image = self.pipe(prompt=inputs, negative_prompt=negative_prompt, height=height, width=width, guidance_scale=float(guidance_scale),num_inference_steps=inference_steps)
                 image = image.images[0]
 
         # Encode image as base64
