@@ -1,4 +1,4 @@
 transformers 
 ftfy 
 accelerate
-pip install diffusers@git+https://github.com/gamingflexer/diffusers
+diffusers@git+https://github.com/gamingflexer/diffusers
