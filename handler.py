@@ -5,7 +5,7 @@ import PIL
 from PIL import Image
 
 from torch import autocast
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline,EulerDiscreteScheduler
 import base64
 from io import BytesIO
 
@@ -20,6 +20,7 @@ class EndpointHandler():
     def __init__(self, path=""):
         # load the optimized model
         self.pipe = StableDiffusionPipeline.from_pretrained(path, torch_dtype=torch.float16,low_cpu_mem_usage=False)
+        self.pipeline.scheduler = EulerDiscreteScheduler.from_config(self.pipeline.scheduler.config)
         self.pipe = self.pipe.to(device)
 
 
