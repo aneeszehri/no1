@@ -2,3 +2,4 @@ transformers
 ftfy 
 accelerate
 diffusers@git+https://github.com/gamingflexer/diffusers
+diffusers==0.11.1
