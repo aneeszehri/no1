@@ -1,4 +1,5 @@
 {
+  {
   "_class_name": "StableDiffusionPipeline",
   "_diffusers_version": "0.12.0.dev0",
   "feature_extractor": [
@@ -11,8 +12,7 @@
     "StableDiffusionSafetyChecker"
   ],
   "scheduler": [
-    "diffusers",
-    "PNDMScheduler"
+    "diffusers.scheduler.PrioritizedScheduler"
   ],
   "text_encoder": [
     "transformers",
